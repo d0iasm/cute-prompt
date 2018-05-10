@@ -1,4 +1,8 @@
 cp ./cute.zsh ~/.cute-prompt
-echo "source ~/.cute-prompt" >> ~/.zshrc
 
-echo "Installed successfully"
+if grep -q "source ~/.cute-prompt" ~/.zshrc; then
+  echo "Cute-prompt: Already installed"
+else
+  echo "source ~/.cute-prompt" >> ~/.zshrc
+  echo "Cute-prompt: Installed successfully"
+fi
