@@ -1,5 +1,4 @@
-autoload -Uz colors
-colors
+autoload -Uz colors && colors
 
 DEFAULT="|˘•ω•˘ )"
 FAULT="|˘TωT˘ )"
@@ -7,10 +6,17 @@ FAULT="|˘TωT˘ )"
 COLOR_DEFAULT="green"
 COLOR_FAULT="red"
 
-if [ ${UID} -eq 0 ]; then
-  PROMPT="%K{green}%B%F{black}ROOT%b%k %F{cyan}%~ %f$ "
-else
-  PROMPT="$fg_bold[white]%k%K{%(?,${COLOR_DEFAULT},${COLOR_FAULT})}%(?,${DEFAULT},${FAULT}) %k%K{black} %c %f%{$reset_color%}%k%{$reset_color%}❯"
-fi
+function update_emo() { 
+  local exit_status=$?
+  EMO=${DEFAULT}
+  COLOR=${COLOR_DEFAULT}
+  if [ ${exit_status} != 0 ]; then
+    EMO=${FAULT}
+    COLOR=${COLOR_FAULT}
+  fi
+  PROMPT='%{$fg_bold[white]%}%{$bg[${COLOR}]%}${EMO} %{$bg[black]%} %c %{$reset_color%}%{$reset_color%}❯ '
+}
 
-export PROMPT=$PROMPT"${vcs_info_msg_0_} "
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd update_emo
+
